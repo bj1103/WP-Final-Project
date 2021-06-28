@@ -13,7 +13,7 @@ const App = () => {
   const savedMe = localStorage.getItem(LOCALSTORAGE_KEY_ME);
   const savedToken = localStorage.getItem(LOCALSTORAGE_KEY_TOKEN);
 
-  const [signedIn, setSignedIn] = useState(false);
+  const [signedIn, setSignedIn] = useState(true);
   const [me, setMe] = useState(savedMe || "");
   const [token, setToken] = useState(savedToken || "");
 
@@ -44,17 +44,22 @@ const App = () => {
   }
 
   return (
-    <div className="App">
-      {signedIn ? (<Room me={me} displayStatus={displayStatus}/>) : (
-      <SignIn 
-        me={me}
-        setMe={setMe}
-        token={token}
-        setToken={setToken}
-        setSignedIn={setSignedIn}
-        displayStatus={displayStatus}
-      />)}
-    </div>);
+    <>
+      {
+        signedIn ? <Room me={me} displayStatus={displayStatus}/> : 
+        <div className="App">
+          <SignIn 
+          me={me}
+          setMe={setMe}
+          token={token}
+          setToken={setToken}
+          setSignedIn={setSignedIn}
+          displayStatus={displayStatus}
+        />
+        </div>
+      }
+    </>
+  );
 };
 
 export default App;
