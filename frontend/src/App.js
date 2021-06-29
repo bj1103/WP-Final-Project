@@ -6,23 +6,23 @@ import SignIn from './containers/SignIn';
 import Room from './containers/Room';
 import { message } from "antd";
 
-const LOCALSTORAGE_KEY_ME = "save-me";
+const LOCALSTORAGE_KEY_NAME = "save-name";
 const LOCALSTORAGE_KEY_TOKEN = "save-token";
 
 const App = () => {
-  const savedMe = localStorage.getItem(LOCALSTORAGE_KEY_ME);
+  const savedName = localStorage.getItem(LOCALSTORAGE_KEY_NAME);
   const savedToken = localStorage.getItem(LOCALSTORAGE_KEY_TOKEN);
 
-  const [signedIn, setSignedIn] = useState(true);
-  const [me, setMe] = useState(savedMe || "");
+  const [signedIn, setSignedIn] = useState(false);
+  const [name, setName] = useState(savedName || "");
   const [token, setToken] = useState(savedToken || "");
 
   useEffect(() => {
     if (signedIn) {
-      localStorage.setItem(LOCALSTORAGE_KEY_ME, me);
+      localStorage.setItem(LOCALSTORAGE_KEY_NAME, name);
       localStorage.setItem(LOCALSTORAGE_KEY_TOKEN, token);
     }
-  }, [signedIn, me, token]);
+  }, [signedIn, name, token]);
 
   const displayStatus = (payload) => {
     if (payload.msg) {
@@ -46,16 +46,20 @@ const App = () => {
   return (
     <>
       {
-        signedIn ? <Room me={me} displayStatus={displayStatus}/> : 
+        signedIn 
+        ? (
+            <Room name={name} token={token} displayStatus={displayStatus}/>
+          )
+        : 
         <div className="App">
           <SignIn 
-          me={me}
-          setMe={setMe}
+          name={name}
+          setName={setName}
           token={token}
           setToken={setToken}
           setSignedIn={setSignedIn}
           displayStatus={displayStatus}
-        />
+          />
         </div>
       }
     </>
