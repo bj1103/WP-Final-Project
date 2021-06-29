@@ -23,12 +23,12 @@ type Room {
 
 type Pos {
   x: Int!,
-  y: Int!,
+  z: Int!,
 }
 
 input PosInput {
   x: Int!,
-  y: Int!,
+  z: Int!,
 }
 
 type Object {

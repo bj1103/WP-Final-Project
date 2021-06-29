@@ -8,7 +8,7 @@ const checkRoom = async (db, token) => {
     return false
 };
 
-const directionVector = {'UP' : [1, 0], 'DOWN' : [-1, 0], 'RIGHT' : [0, 1], 'LEFT' : [0, -1]}
+const directionVector = {'UP' : [0, -1], 'DOWN' : [0, 1], 'RIGHT' : [1, 0], 'LEFT' : [-1, 0]}
 
 const Mutation = {
   async createRoom(parent, { token }, { db, localDb, pubsub }, info) {
@@ -47,7 +47,7 @@ const Mutation = {
       'name': name,
       'pos' : {
         x : 0,
-        y : 0,
+        z : 0,
       }
     }
 
@@ -78,7 +78,7 @@ const Mutation = {
     }
     var newPos = {
       'x' : user['pos']['x'] + directionVector[direction][0],
-      'y' : user['pos']['y'] + directionVector[direction][1]
+      'z' : user['pos']['z'] + directionVector[direction][1]
     }
     user['pos'] = newPos;
     localDb[token]['users'][userIndex] = user
@@ -103,11 +103,9 @@ const Mutation = {
     else {
       furniture = await new db.ObjectModel({ type, pos, token }).save();
       var room = await db.RoomModel.findOne({ token });
-      console.log(room)
       room.objects.push(furniture);
       await room.save();
       var room = await db.RoomModel.findOne({ token });
-      console.log(room)
       pubsub.publish(`Subscribe objects in ${token}`, {subscribeToObject : furniture});
       return furniture;
     }

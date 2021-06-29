@@ -10,7 +10,7 @@ const objectSchema = new Schema({
   name: String,
   pos: {
     x: Number,
-    y:  Number
+    z: Number
   },
   token: String,
   type : String
