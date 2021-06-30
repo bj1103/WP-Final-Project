@@ -12,6 +12,7 @@ const Subscription = {
       if (!(await checkRoom(db, token))) {
         throw new Error(`Room ${token} does not exist`);
       }
+      console.log(`Subscribe to ${token}`);
       return pubsub.asyncIterator(`Subscribe users in ${token}`);
     }
   },

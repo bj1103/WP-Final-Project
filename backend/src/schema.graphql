@@ -3,10 +3,10 @@ type Query {
 }
 
 type Mutation {
-  login(token: String!, name: String!): Pos!
+  login(token: String!, name: String!, character: String!): Pos!
   createRoom(token: String!): Room!
   move(token: String!, name: String!, direction: DirectionType!): Pos!
-  createObject(token: String!, type: FurnitureType!, pos : PosInput): Object!
+  createObject(token: String!, type: String!, pos : PosInput): Object!
 }
 
 type Subscription {
@@ -32,7 +32,7 @@ input PosInput {
 }
 
 type Object {
-  type: FurnitureType!,
+  type: String!,
   pos: Pos!,
   id: ID!,
   token: String!,
@@ -47,6 +47,7 @@ type User {
   pos: Pos!,
   name: String!,
   id: ID!,
+  character: String!,
 }
 
 enum DirectionType {

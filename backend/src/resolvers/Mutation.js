@@ -12,6 +12,7 @@ const directionVector = {'UP' : [0, -1], 'DOWN' : [0, 1], 'RIGHT' : [1, 0], 'LEF
 
 const Mutation = {
   async createRoom(parent, { token }, { db, localDb, pubsub }, info) {
+    console.log(`create room ${token}`)
     if (!token)
       throw new Error("Missing room token for createRoom");
 
@@ -27,7 +28,8 @@ const Mutation = {
     return room;
   },
 
-  async login(parent, { token, name }, { db, localDb, pubsub }, info) {
+  async login(parent, { token, name, character }, { db, localDb, pubsub }, info) {
+    console.log(`login from ${name} to room ${token} as ${character}`)
     if (!token)
       throw new Error("Missing room token for createRoom");
 
@@ -37,24 +39,36 @@ const Mutation = {
     if (!(await checkRoom(db, token))) {
       throw new Error(`Room ${token} does not exist`);
     }
-    
-    if (localDb[token]['users'].findIndex(user => user['name'] == name) != -1) {
-      throw new Error(`Username ${name} has been used`);
-    }
-
-    var user = {
-      'id': uuidv4(),
-      'name': name,
-      'pos' : {
-        x : 0,
-        z : 0,
+    var index = localDb[token]['users'].findIndex(user => user['name'] == name);
+    if (index != -1) {
+      // throw new Error(`Username ${name} has been used`);
+      var user = {
+        'id': localDb[token]['users'][index]['id'],
+        'name': name,
+        'pos' : {
+          x : 0,
+          z : 0,
+        },
+        'character': character
       }
+      localDb[token]['users'][index] = user;
+      pubsub.publish(`Subscribe users in ${token}`, {subscribeToUser : user});
+      return user['pos']
+    } 
+    else {
+      var user = {
+        'id': uuidv4(),
+        'name': name,
+        'pos' : {
+          x : 0,
+          z : 0,
+        },
+        'character': character
+      }
+      localDb[token]['users'].push(user)
+      pubsub.publish(`Subscribe users in ${token}`, {subscribeToUser : user});
+      return user['pos']
     }
-
-    localDb[token]['users'].push(user)
-    pubsub.publish(`Subscribe users in ${token}`, {subscribeToUser : user});
-
-    return user['pos']
   },
 
   move(parent, { token, name, direction }, { db, localDb, pubsub }, info) {
@@ -70,6 +84,7 @@ const Mutation = {
     // if (!(await checkRoom(db, token))) {
     //   throw new Error(`Room ${token} does not exist`);
     // }
+    console.log(`${name} move ${direction} in room ${token}`)
     var userIndex = localDb[token]['users'].findIndex(user => user['name'] == name);
     var user = localDb[token]['users'][userIndex]
 
@@ -87,6 +102,7 @@ const Mutation = {
   },
   
   async createObject(parent, { token, type, pos }, { db, localDb, pubsub }, info) {
+    console.log(`add objects ${type} in room ${token}`)
     if (!token)
       throw new Error("Missing room token for createRoom");
 
