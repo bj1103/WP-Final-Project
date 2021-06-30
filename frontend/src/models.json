@@ -1,4 +1,10 @@
 {
     "test": "./test/scene.gltf",
-    "Spotted-Jelly": "./Spotted-Jelly/source/Spotted-Jelly.gltf"
+    "Spotted-Jelly": "./Spotted-Jelly/source/Spotted-Jelly.gltf",
+    "creeper": "./creeper/creeper.fbx",
+    "table": { "type" : "./table/scene.gltf", "scalar" : 0.2 },
+    "armchair": { "type" : "./armchair/scene.gltf", "scalar" : 4 },
+    "gundam_unicorn": { "type" : "./gundam_unicorn/scene.gltf", "scalar" : 0.01 },
+    "rick_astley": { "type" : "./rick_astley/scene.gltf", "scalar" : 0.7 }
+
 }

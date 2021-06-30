@@ -3,7 +3,9 @@ import { useThree, useLoader } from '@react-three/fiber';
 import { useBox } from "@react-three/cannon";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
-const Friend = ({ name, x, z, textOptions }) => {
+import Text from './Text';
+
+const Friend = ({ name, x, z }) => {
     // const gltf = useLoader(GLTFLoader, './test/scene.gltf');
     const [ref, api] = useBox(() => ({ mass: 1, position: [0, 0, 0] }));
     const position = useRef([0, 0, 0]);
@@ -14,19 +16,19 @@ const Friend = ({ name, x, z, textOptions }) => {
     }, []);
 
     useEffect(() => {
-        console.log('friend', name, x, z);
+        // console.log('friend', name, x, z);
         api.position.set(x, position.current[1], z);
         // gltf.scene.position.set(x, 0, z);
     }, [x, z]);
 
     return (
-        <mesh
-            ref={ref}
-            position={[0, 0, 0]}
-        >
-            <boxBufferGeometry attach="geometry" />
-            <meshLambertMaterial attach="material" color="hotpink" />
-        </mesh>
+        <>
+            <Text text={name} position={[position.current[0], 2, position.current[2]]}/>
+            <mesh ref={ref}  position={[0, 0, 0]} >
+                <boxBufferGeometry attach="geometry" />
+                <meshLambertMaterial attach="material" color="hotpink" />
+            </mesh>
+        </>
         // <>
         //     {<primitive 
         //         object={gltf.scene.clone(true)} 

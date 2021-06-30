@@ -5,12 +5,12 @@ import * as THREE from 'three';
 import { Physics } from '@react-three/cannon';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
-import helvetiker_regular from 'three/examples/fonts/helvetiker_regular.typeface.json';
 import models from '../models.json';
 
 import Plane from '../objects/Plane';
 import Player from '../objects/Player';
 import Friend from '../objects/Friend';
+import Objects from '../objects/Objects';
 
 import { useMutation, useQuery, useSubscription } from '@apollo/react-hooks';
 import { 
@@ -23,12 +23,7 @@ const Room = ({ name, token, model, displayStatus }) => {
     const [userMove] = useMutation(USER_MOVE_MUTATION);
     const [friends, setFriends] = useState([]);
     const [myPos, setMyPos] = useState([0, 0, 0]);
-    // const gltf = useLoader(GLTFLoader, models[model]);
-    // const friendsGltf = useLoader(GLTFLoader, models["test"]);
-
-    useEffect(() => {
-        console.log('Room is created');
-    }, []);
+    const [objects, setObjects] = useState([]);
 
     const move = (direction) => {
         userMove({
@@ -56,6 +51,7 @@ const Room = ({ name, token, model, displayStatus }) => {
         if (data) {
             console.log('query data', data);
             setFriends(data.room.users);
+            setObjects(data.room.objects);
             let me = data.room.users.find(user => user.name === name);
             setMyPos([me.pos.x, 0, me.pos.z]);
         }
@@ -69,8 +65,8 @@ const Room = ({ name, token, model, displayStatus }) => {
             },
             onSubscriptionData: (data) => {
                 data = data.subscriptionData.data.subscribeToUser;
-                console.log(`subscription data ${data.name}: ${data.pos.x}, ${data.pos.z}`);
-                console.log('friends:', friends);
+                // console.log(`subscription data ${data.name}: ${data.pos.x}, ${data.pos.z}`);
+                // console.log('friends:', friends);
                 if (data.name === name || friends.length === 0)
                     return;
                 try {
@@ -89,15 +85,8 @@ const Room = ({ name, token, model, displayStatus }) => {
         }
     );
 
-    const font = new THREE.FontLoader().parse(helvetiker_regular);
-    const textOptions = {
-        font,
-        size: 5,
-        height: 1
-    };
-
     return (
-        <Canvas camera={{position: [myPos[0], 3, myPos[2]+5]}}>
+        <Canvas camera={{position: [0, 3, 5]}}>
             {/* <Stars /> */}
             <ambientLight intensity={0.5} />
             {/* <spotLight position={[10, 15, 10]} angle={0.3} /> */}
@@ -106,20 +95,23 @@ const Room = ({ name, token, model, displayStatus }) => {
                     {
                         friends.map(friend => {
                             return (friend.name === name) ? 
-                            <Player 
+                            <Player
+                                name={name}
                                 move={move}
                                 myPos={myPos}
-                                // gltf={gltfs['test'].clone(true)}
                             /> :
                             <Friend 
                                 name={friend.name} 
                                 key={friend.name} 
                                 x={friend.pos.x} 
                                 z={friend.pos.z}
-                                textOptions={textOptions}
-                                // gltf={gltfs['test'].clone(true)}
                             />
                         })
+                    }
+                </Suspense>
+                <Suspense fallback={null}>
+                    {
+                        objects.map(object => <Objects type={object.type} x={object.pos.x} z={object.pos.z}/>)
                     }
                 </Suspense>
                 <Plane />

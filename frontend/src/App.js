@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 
 import SignIn from './components/SignIn';
 import Room from './components/Room';
@@ -52,12 +52,14 @@ const App = () => {
       {
         signedIn 
         ? (
-            <Room 
-              name={name} 
-              token={token}
-              model={model}
-              displayStatus={displayStatus}
-            />
+            <Suspense fallback={null}>
+              <Room 
+                name={name} 
+                token={token}
+                model={model}
+                displayStatus={displayStatus}
+              />
+            </Suspense>
           )
         : 
         <div className="App">
