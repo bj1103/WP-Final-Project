@@ -1,12 +1,14 @@
 type Query {
   room(token: String!): Room!
+  getCharacter(token: String!, characters: [String!]): [String!]
 }
 
 type Mutation {
   login(token: String!, name: String!, character: String!): Pos!
   createRoom(token: String!): Room!
   move(token: String!, name: String!, direction: DirectionType!): Pos!
-  createObject(token: String!, type: String!, pos : PosInput): Object!
+  createObject(token: String!, type: String!, posX: Int!, posZ: Int!): Object!
+  deleteObject(token: String!, posX: Int!, posZ: Int!): Boolean!
 }
 
 type Subscription {

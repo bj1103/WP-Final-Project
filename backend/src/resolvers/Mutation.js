@@ -101,8 +101,9 @@ const Mutation = {
     return newPos
   },
   
-  async createObject(parent, { token, type, pos }, { db, localDb, pubsub }, info) {
+  async createObject(parent, { token, type, posX, posZ }, { db, localDb, pubsub }, info) {
     console.log(`add objects ${type} in room ${token}`)
+    var pos = { x : posX, z : posZ }
     if (!token)
       throw new Error("Missing room token for createRoom");
 
@@ -124,6 +125,32 @@ const Mutation = {
       var room = await db.RoomModel.findOne({ token });
       pubsub.publish(`Subscribe objects in ${token}`, {subscribeToObject : furniture});
       return furniture;
+    }
+  },
+  async deleteObject(parent, { token, posX, posZ }, { db, localDb, pubsub }, info) {
+    console.log(`clean objects in room ${token}`)
+    var pos = { x : posX, z : posZ }
+    if (!token)
+      throw new Error("Missing room token for createRoom");
+
+    if (!(await checkRoom(db, token))) {
+      throw new Error(`Room ${token} does not exist`);
+    }
+    try {
+      var deleteObject = await db.ObjectModel.findOne({ pos, token });
+      var deleteId = deleteObject['id'];
+      var room = await db.RoomModel.findOne({ token });
+      // console.log(room.objects)
+
+      var index = room.objects.findIndex(x => x == deleteId);
+      room.objects.splice(index, 1);
+      // console.log(room.objects)
+      await db.ObjectModel.deleteOne({ pos, token })
+      await db.RoomModel.updateOne({ token }, {$set:{ token:token, objects:room.objects }}, {new: true});
+      return true;
+    }
+    catch (e) {
+      throw new Error(`Delete error, ${e}`);
     }
   },
 };
