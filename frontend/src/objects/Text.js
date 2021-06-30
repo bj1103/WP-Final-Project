@@ -1,10 +1,13 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Canvas } from 'react-three-fiber';
 import * as THREE from 'three';
 
 const Text = ({ text, position, scale = [2, 2, 2], color = 'black', fontSize = 40 }) => {
-
+    
     const canvas = useMemo(() => {
+
+        console.log('Render text', text);
+
         var fontface = 'Arial'
         var fontsize = fontSize
         var borderThickness = 4

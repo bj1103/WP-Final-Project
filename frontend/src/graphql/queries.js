@@ -17,6 +17,7 @@ export const ROOM_QUERY = gql`
                     z
                 }
                 character,
+                message,
             },
         }
     }

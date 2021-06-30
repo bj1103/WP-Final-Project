@@ -9,6 +9,7 @@ export const USER_SUBSCRIPTION = gql`
             },
             name,
             character,
+            message
         }
     }
 `;

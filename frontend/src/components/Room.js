@@ -1,18 +1,14 @@
 import { useState, useRef, useEffect, Suspense  } from "react";
 import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
-import { Stars } from '@react-three/drei';
-import * as THREE from 'three';
+import { Stars, useAspect } from '@react-three/drei';
 import { Physics } from '@react-three/cannon';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-
-import models from '../data/models.json';
-import characters from '../data/characters.json';
 
 import Plane from '../objects/Plane';
 import Player from '../objects/Player';
 import Friend from '../objects/Friend';
 import Objects from '../objects/Objects';
-import SelectModal from "./SelectModal";
+import SelectModal from './SelectModal';
+import MessageModal from './MessageModal';
 
 import { useMutation, useQuery, useSubscription } from '@apollo/react-hooks';
 
@@ -29,6 +25,7 @@ const Room = ({ name, token, model, displayStatus }) => {
     const [myPos, setMyPos] = useState([0, 0, 0]);
     const [objects, setObjects] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
+    const [modalVisible2, setModalVisible2] = useState(false);
 
     const move = (direction) => {
         userMove({
@@ -45,8 +42,11 @@ const Room = ({ name, token, model, displayStatus }) => {
 
     useEffect(() => {
         document.addEventListener('keydown', (e) => {
-            if (e.key === ' ') {
+            if (e.key === ' ' && !modalVisible2) {
                 setModalVisible(true);
+            }
+            if (e.key === 'm') {
+                setModalVisible2(true);
             }
         })
     }, []);
@@ -103,9 +103,9 @@ const Room = ({ name, token, model, displayStatus }) => {
             },
             onSubscriptionData: (data) => {
                 data = data.subscriptionData.data.subscribeToUser;
-                // console.log(`subscription data ${data.name}: ${data.pos.x}, ${data.pos.z}`);
+                // console.log('subscription data', data);
                 // console.log('friends:', friends);
-                if (data.name === name || friends.length === 0)
+                if (friends.length === 0)
                     return;
                 try {
                     var newFriends = friends.slice(0);
@@ -132,6 +132,12 @@ const Room = ({ name, token, model, displayStatus }) => {
                 visible={modalVisible} 
                 setVisible={setModalVisible}
             />
+            <MessageModal
+                token={token}
+                name={name}
+                visible={modalVisible2}
+                setVisible={setModalVisible2}
+            />
             <Canvas camera={{position: [0, 3, 5]}}>
                 {/* <Stars /> */}
                 <ambientLight intensity={0.5} />
@@ -144,9 +150,11 @@ const Room = ({ name, token, model, displayStatus }) => {
                                 <Player
                                     name={name}
                                     move={move}
+                                    key={name}
                                     myPos={myPos}
                                     setMyPos={setMyPos}
                                     character={model}
+                                    message={friend.message}
                                 /> :
                                 <Friend 
                                     name={friend.name} 
@@ -154,6 +162,7 @@ const Room = ({ name, token, model, displayStatus }) => {
                                     x={friend.pos.x} 
                                     z={friend.pos.z}
                                     character={friend.character}
+                                    message={friend.message}
                                 />
                             })
                         }

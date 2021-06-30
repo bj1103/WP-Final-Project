@@ -5,10 +5,10 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import characters from '../data/characters.json';
 import Text from './Text';
 
-const Friend = ({ name, x, z, character }) => {
-    console.log('type:', character);
-    console.log('char:', characters);
-    console.log(character, characters[character]['type']);
+const Friend = ({ name, x, z, character, message }) => {
+    // console.log('type:', character);
+    // console.log('char:', characters);
+    // console.log(character, characters[character]['type']);
     const gltf = useLoader(GLTFLoader, characters[character]['type']);
     // const [ref, api] = useBox(() => ({ mass: 1, position: [0, 0, 0] }));
     // const position = useRef([0, 0, 0]);
@@ -34,6 +34,7 @@ const Friend = ({ name, x, z, character }) => {
         // </>
         <>
             <Text text={name} position={[gltf.scene.position.x, 2, gltf.scene.position.z]}/>
+            <Text text={message} position={[gltf.scene.position.x, 2.5, gltf.scene.position.z]}/>
             {<primitive 
                 object={gltf.scene.clone(true)} 
                 scale={characters[character]['scalar']}

@@ -1,6 +1,10 @@
 import { Modal, Select } from 'antd';
 import { useMutation, useQuery } from '@apollo/react-hooks';
-import { USER_LOGIN_MUTATION, CHARACTER_QUERY } from '../graphql';
+import { 
+    USER_LOGIN_MUTATION, 
+    CHARACTER_QUERY,
+    ROOM_CREATE_MUTATION,
+} from '../graphql';
 
 import characters from '../data/characters.json';
 import { useEffect, useState } from 'react';
@@ -9,22 +13,31 @@ const { Option } = Select;
 
 const ModelModal = ({ token, name, model, setModel, visible, setVisible, setSignedIn }) => {
     const [userLogin] = useMutation(USER_LOGIN_MUTATION);
+    const [createRoom] = useMutation(ROOM_CREATE_MUTATION);
     const [usableCharacters, setUsableCharacters] = useState([]);
 
     const login = (token, name) => {
-        try {
-            userLogin({
+        userLogin({
+            variables: {
+                token: token,
+                name: name,
+                character: model
+            }
+        }).then(() => {
+            setSignedIn(true);
+        }).catch(e => {
+            console.log('Login faild');
+            createRoom({
                 variables: {
                     token: token,
                     name: name,
-                    character: model
+                    character: model,
                 }
+            }).then(() => {
+                console.log('New room created', token);
+                setSignedIn(true);
             });
-            setSignedIn(true);
-        } catch (e) {
-            console.log("Login fucked up")
-            console.log(JSON.stringify(e, null, 2));
-        }
+        });
     }
 
     const handleOk = () => {
