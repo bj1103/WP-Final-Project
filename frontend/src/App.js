@@ -5,7 +5,9 @@ import { useState, useEffect, Suspense } from "react";
 import SignIn from './components/SignIn';
 import Room from './components/Room';
 import { message } from "antd";
-import models from './models.json';
+
+import models from './data/models.json';
+import characters from './data/characters.json';
 
 const LOCALSTORAGE_KEY_NAME = "save-name";
 const LOCALSTORAGE_KEY_TOKEN = "save-token";
@@ -19,7 +21,7 @@ const App = () => {
   const [signedIn, setSignedIn] = useState(false);
   const [name, setName] = useState(savedName || "");
   const [token, setToken] = useState(savedToken || "");
-  const [model, setModel] = useState(savedModel || Object.keys(models)[0]);
+  const [model, setModel] = useState(savedModel || Object.keys(characters)[0]);
 
   useEffect(() => {
     if (signedIn) {

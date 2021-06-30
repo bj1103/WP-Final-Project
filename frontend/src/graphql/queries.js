@@ -16,7 +16,14 @@ export const ROOM_QUERY = gql`
                     x,
                     z
                 }
+                character,
             },
         }
+    }
+`;
+
+export const CHARACTER_QUERY = gql`
+    query getCharacter($token: String!, $characters: [String!]) {
+        getCharacter(token: $token, characters: $characters)
     }
 `;

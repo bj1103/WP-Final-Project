@@ -5,18 +5,22 @@ import * as THREE from 'three';
 import { Physics } from '@react-three/cannon';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
-import models from '../models.json';
+import models from '../data/models.json';
+import characters from '../data/characters.json';
 
 import Plane from '../objects/Plane';
 import Player from '../objects/Player';
 import Friend from '../objects/Friend';
 import Objects from '../objects/Objects';
+import SelectModal from "./SelectModal";
 
 import { useMutation, useQuery, useSubscription } from '@apollo/react-hooks';
+
 import { 
     USER_MOVE_MUTATION, 
     ROOM_QUERY,
     USER_SUBSCRIPTION,
+    OBJECT_SUBSCRIPTION,
 } from '../graphql';
 
 const Room = ({ name, token, model, displayStatus }) => {
@@ -24,6 +28,7 @@ const Room = ({ name, token, model, displayStatus }) => {
     const [friends, setFriends] = useState([]);
     const [myPos, setMyPos] = useState([0, 0, 0]);
     const [objects, setObjects] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
 
     const move = (direction) => {
         userMove({
@@ -37,7 +42,15 @@ const Room = ({ name, token, model, displayStatus }) => {
             console.log(JSON.stringify(e, null, 2));
         });
     }
-    
+
+    useEffect(() => {
+        document.addEventListener('keydown', (e) => {
+            if (e.key === ' ') {
+                setModalVisible(true);
+            }
+        })
+    }, []);
+
     const { loading, error, data, subscribeToMore } = useQuery(
         ROOM_QUERY,
         { 
@@ -56,6 +69,31 @@ const Room = ({ name, token, model, displayStatus }) => {
             setMyPos([me.pos.x, 0, me.pos.z]);
         }
     }, [data]);
+
+    useSubscription(
+        OBJECT_SUBSCRIPTION,
+        {
+            variables: {
+                token: token,
+            },
+            onSubscriptionData: (data) => {
+                data = data.subscriptionData.data.subscribeToObject;
+                console.log('Subscription getting object:', data);
+                try {
+                    var newObjects = objects.slice(0);
+                    var idx = newObjects.findIndex(object => object.id === data.id);
+                    if (idx === -1) {
+                        newObjects.push(data);
+                    } else {
+                        newObjects[idx] = data;
+                    }
+                    setObjects(newObjects);
+                } catch (e) {
+                    console.log('Subscription fucked up', e)
+                }
+            },
+        }
+    )
     
     useSubscription(
         USER_SUBSCRIPTION,
@@ -86,37 +124,49 @@ const Room = ({ name, token, model, displayStatus }) => {
     );
 
     return (
-        <Canvas camera={{position: [0, 3, 5]}}>
-            {/* <Stars /> */}
-            <ambientLight intensity={0.5} />
-            {/* <spotLight position={[10, 15, 10]} angle={0.3} /> */}
-            <Physics>
-                <Suspense fallback={null}>
-                    {
-                        friends.map(friend => {
-                            return (friend.name === name) ? 
-                            <Player
-                                name={name}
-                                move={move}
-                                myPos={myPos}
-                            /> :
-                            <Friend 
-                                name={friend.name} 
-                                key={friend.name} 
-                                x={friend.pos.x} 
-                                z={friend.pos.z}
-                            />
-                        })
-                    }
-                </Suspense>
-                <Suspense fallback={null}>
-                    {
-                        objects.map(object => <Objects type={object.type} x={object.pos.x} z={object.pos.z}/>)
-                    }
-                </Suspense>
-                <Plane />
-            </Physics>
-        </Canvas>
+        <>
+            <SelectModal 
+                token={token} 
+                x={myPos[0]}
+                z={myPos[2]}
+                visible={modalVisible} 
+                setVisible={setModalVisible}
+            />
+            <Canvas camera={{position: [0, 3, 5]}}>
+                {/* <Stars /> */}
+                <ambientLight intensity={0.5} />
+                {/* <spotLight position={[10, 15, 10]} angle={0.3} /> */}
+                <Physics>
+                    <Suspense fallback={null}>
+                        {
+                            friends.map(friend => {
+                                return (friend.name === name) ? 
+                                <Player
+                                    name={name}
+                                    move={move}
+                                    myPos={myPos}
+                                    setMyPos={setMyPos}
+                                    character={model}
+                                /> :
+                                <Friend 
+                                    name={friend.name} 
+                                    key={friend.name} 
+                                    x={friend.pos.x} 
+                                    z={friend.pos.z}
+                                    character={friend.character}
+                                />
+                            })
+                        }
+                    </Suspense>
+                    <Suspense fallback={null}>
+                        {
+                            objects.map(object => <Objects type={object.type} x={object.pos.x} z={object.pos.z}/>)
+                        }
+                    </Suspense>
+                    <Plane />
+                </Physics>
+            </Canvas>
+        </>
     );
 };
 

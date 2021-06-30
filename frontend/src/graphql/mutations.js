@@ -34,4 +34,39 @@ const USER_MOVE_MUTATION = gql`
         }
     }
 `;
-export { USER_LOGIN_MUTATION, USER_MOVE_MUTATION };
+const OBJECT_CREATE_MUTATION = gql`
+    mutation createObject(
+        $token: String!, 
+        $type: String!,
+        $posX: Int!,
+        $posZ: Int!,
+    ) {
+        createObject(
+            token: $token,
+            type: $type,
+            posX: $posX,
+            posZ: $posZ,
+        ) {
+            type,
+            pos {
+                x,
+                z,
+            }
+        }
+    }
+`;
+
+const OBJECT_DELETE_MUTATION = gql`
+    mutation deleteObject(
+        $token: String!, 
+        $posX: Int!,
+        $posZ: Int!,
+    ) {
+        deleteObject(
+            token: $token,
+            posX: $posX,
+            posZ: $posZ,
+        )
+    }
+`;
+export { USER_LOGIN_MUTATION, USER_MOVE_MUTATION, OBJECT_CREATE_MUTATION, OBJECT_DELETE_MUTATION };

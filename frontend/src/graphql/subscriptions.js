@@ -8,6 +8,20 @@ export const USER_SUBSCRIPTION = gql`
                 z
             },
             name,
+            character,
+        }
+    }
+`;
+
+export const OBJECT_SUBSCRIPTION = gql`
+    subscription OnObject($token: String!) {
+        subscribeToObject(token: $token) {
+            pos {
+                x,
+                z
+            },
+            type,
+            id,
         }
     }
 `;

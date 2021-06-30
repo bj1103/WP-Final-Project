@@ -1,5 +1,5 @@
 import { useGLTF, useTexture } from '@react-three/drei';
-import models from '../models';
+import models from '../data/models.json';
 
 const Objects = ({ type, x, z }) => {
     let gltf = useGLTF(models[type]['type']);

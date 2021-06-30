@@ -1,0 +1,4 @@
+{
+    "table": { "type" : "./table/scene.gltf", "scalar" : 0.2 },
+    "armchair": { "type" : "./armchair/scene.gltf", "scalar" : 4 }
+}
