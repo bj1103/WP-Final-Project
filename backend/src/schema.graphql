@@ -1,0 +1,60 @@
+type Query {
+  room(token: String!): Room!
+  getCharacter(token: String!, characters: [String!]): [String!]
+}
+
+type Mutation {
+  login(token: String!, name: String!, character: String!): Pos!
+  createRoom(token: String!): Room!
+  move(token: String!, name: String!, direction: DirectionType!): Pos!
+  createObject(token: String!, type: String!, posX: Int!, posZ: Int!): Object!
+  deleteObject(token: String!, posX: Int!, posZ: Int!): Boolean!
+}
+
+type Subscription {
+  subscribeToUser(token: String!): User!
+  subscribeToObject(token: String!): Object!
+}
+
+type Room {
+  id: ID!,
+  token: String!
+  objects: [Object!]
+  users: [User!]
+}
+
+type Pos {
+  x: Int!,
+  z: Int!,
+}
+
+input PosInput {
+  x: Int!,
+  z: Int!,
+}
+
+type Object {
+  type: String!,
+  pos: Pos!,
+  id: ID!,
+  token: String!,
+}
+
+enum FurnitureType {
+  TABLE,
+  CHAIR,
+}
+
+type User {
+  pos: Pos!,
+  name: String!,
+  id: ID!,
+  character: String!,
+}
+
+enum DirectionType {
+  UP,
+  DOWN,
+  LEFT,
+  RIGHT,
+}
