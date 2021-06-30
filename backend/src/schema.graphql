@@ -5,10 +5,11 @@ type Query {
 
 type Mutation {
   login(token: String!, name: String!, character: String!): Pos!
-  createRoom(token: String!): Room!
+  createRoom(token: String!, name: String!, character: String!): Room!
   move(token: String!, name: String!, direction: DirectionType!): Pos!
   createObject(token: String!, type: String!, posX: Int!, posZ: Int!): Object!
   deleteObject(token: String!, posX: Int!, posZ: Int!): Boolean!
+  sendMessage(token: String!, name:String!, message:String!): String!
 }
 
 type Subscription {
@@ -50,6 +51,7 @@ type User {
   name: String!,
   id: ID!,
   character: String!,
+  message: String!
 }
 
 enum DirectionType {
