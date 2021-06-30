@@ -1,0 +1,16 @@
+--2021-06-30 19:14:39--  https://free3d.com/dl-files.php?p=56c0d0a926be8b05378b4567
+已載入 CA 憑證「/etc/ssl/certs/ca-certificates.crt」
+正在查找主機 free3d.com (free3d.com)... 104.26.11.133, 172.67.69.246, 104.26.10.133, ...
+正在連接 free3d.com (free3d.com)|104.26.11.133|:443... 連上了。
+已送出 HTTP 要求，正在等候回應... 301 Moved Permanently
+位置: /3d-model/wood-table-18297.html [跟隨至新的 URL]
+--2021-06-30 19:14:41--  https://free3d.com/3d-model/wood-table-18297.html
+繼續使用和 free3d.com:443 的連線。
+已送出 HTTP 要求，正在等候回應... 200 OK
+長度: 未指定 [text/html]
+儲存到：「dl-files.php?p=56c0d0a926be8b05378b4567」
+
+             dl-files.php?     [<=>                                    ]       0  --.-KB/s                           dl-files.php?p     [ <=>                                   ]   8.59K  42.0KB/s                          dl-files.php?p=     [  <=>                                  ]  27.77K  66.6KB/s                         dl-files.php?p=5     [   <=>                                 ]  59.01K  93.3KB/s                        dl-files.php?p=56     [    <=>                                ] 103.29K   122KB/s               dl-files.php?p=56c0d0a926b     [     <=>                               ] 142.97K   162KB/s  於 0.9s      
+
+2021-06-30 19:14:43 (162 KB/s) - 已儲存 「dl-files.php?p=56c0d0a926be8b05378b4567」 [146402]
+
