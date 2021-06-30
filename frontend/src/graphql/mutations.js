@@ -5,10 +5,12 @@ const USER_LOGIN_MUTATION = gql`
     mutation userLogin(
         $token: String!, 
         $name: String!,
+        $character: String!,
     ) {
         login(
             token: $token,
             name: $name,
+            character: $character
         ) {
             x,
             z,

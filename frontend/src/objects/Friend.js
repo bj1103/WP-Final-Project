@@ -16,6 +16,7 @@ const Friend = ({ name, x, z, textOptions }) => {
     useEffect(() => {
         console.log('friend', name, x, z);
         api.position.set(x, position.current[1], z);
+        // gltf.scene.position.set(x, 0, z);
     }, [x, z]);
 
     return (
@@ -27,7 +28,11 @@ const Friend = ({ name, x, z, textOptions }) => {
             <meshLambertMaterial attach="material" color="hotpink" />
         </mesh>
         // <>
-        //     <primitive object={gltf.scene} scale={1.2} rotation={[ 0, -Math.PI, 0]} />
+        //     {<primitive 
+        //         object={gltf.scene.clone(true)} 
+        //         scale={2.5}
+        //         rotation={[0, Math.PI / 2, 0]}
+        //     />}
         // </>
     );
 }

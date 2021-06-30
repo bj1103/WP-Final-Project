@@ -6,7 +6,7 @@ const Plane = () => {
     }));
     return (
         <mesh ref={ref} rotation={[-Math.PI/2, 0, 0]}>
-            <planeBufferGeometry attach="geometry" args={[1000, 1000, 128, 128]}/>
+            <planeBufferGeometry attach="geometry" args={[50, 50, 25, 25]}/>
             <meshLambertMaterial
                 attach="material" 
                 color="white"

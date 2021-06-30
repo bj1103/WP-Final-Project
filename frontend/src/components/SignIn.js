@@ -1,26 +1,26 @@
 import "../App.css";
+import { useState } from 'react';
 import { Input } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 
-import { useMutation } from '@apollo/react-hooks';
-import { USER_LOGIN_MUTATION } from '../graphql';
+import ModelModal from './ModelModal';
 
-const SignIn = ({ name, setName, token, setToken, setSignedIn, displayStatus }) => {
+const SignIn = ({ name, setName, token, setToken, model, setModel, setSignedIn, displayStatus }) => {
 
-    const [userLogin] = useMutation(USER_LOGIN_MUTATION);
-
-    const login = (token, name) => {
-        userLogin({
-            variables: {
-                token: token,
-                name: name,
-            }
-        });
-    }
+    const [modalVisible, setModalVisible] = useState(false);
 
     return (
         <>
             <div className="App-title"><h1>Join a room</h1></div>
+            <ModelModal
+                token={token}
+                name={name}
+                model={model}
+                setModel={setModel}
+                visible={modalVisible}
+                setVisible={setModalVisible}
+                setSignedIn={setSignedIn}
+            />
             <Input
                 value={token}
                 placeholder="Enter room token"
@@ -42,8 +42,7 @@ const SignIn = ({ name, setName, token, setToken, setSignedIn, displayStatus }) 
                     else if (!name)
                         displayStatus({type: 'error', msg: 'Missing user name'});
                     else {
-                        login(token, name);
-                        setSignedIn(true);
+                        setModalVisible(true);
                     }
                 }}
             ></Input.Search>
