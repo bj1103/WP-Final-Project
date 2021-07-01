@@ -11,7 +11,7 @@ const checkRoom = async (db, token) => {
 const directionVector = {'UP' : [0, -1], 'DOWN' : [0, 1], 'RIGHT' : [1, 0], 'LEFT' : [-1, 0]}
 
 const Mutation = {
-  async createRoom(parent, { token }, { db, localDb, pubsub }, info) {
+  async createRoom(parent, { token, name, character }, { db, localDb, pubsub }, info) {
     console.log(`create room ${token}`)
     if (!token)
       throw new Error("Missing room token for createRoom");
@@ -22,8 +22,17 @@ const Mutation = {
 
     var room = await new db.RoomModel({ token }).save();
     // room = room.populate('objects').execPopulate();
-
-    localDb[token] = { 'users': [] }
+    var user = {
+      'id': uuidv4(),
+      'name': name,
+      'pos' : {
+        x : 0,
+        z : 0,
+      },
+      'character': character,
+      'message' : ""
+    }
+    localDb[token] = { 'users': [user] }
     room['users'] = localDb[token]['users']
     return room;
   },
@@ -49,7 +58,8 @@ const Mutation = {
           x : 0,
           z : 0,
         },
-        'character': character
+        'character': character,
+        'message' : ""
       }
       localDb[token]['users'][index] = user;
       pubsub.publish(`Subscribe users in ${token}`, {subscribeToUser : user});
@@ -63,7 +73,8 @@ const Mutation = {
           x : 0,
           z : 0,
         },
-        'character': character
+        'character': character,
+        'message' : ""
       }
       localDb[token]['users'].push(user)
       pubsub.publish(`Subscribe users in ${token}`, {subscribeToUser : user});
@@ -151,6 +162,38 @@ const Mutation = {
     }
     catch (e) {
       throw new Error(`Delete error, ${e}`);
+    }
+  },
+  async sendMessage(parent, { token, name, message }, { db, localDb, pubsub }, info) {
+    console.log(`sendMessage ${message} from ${name} to room ${token}`)
+    if (!token)
+      throw new Error("Missing room token for createRoom");
+
+    if (!name)
+      throw new Error("Missing user name");
+
+    if (!(await checkRoom(db, token))) {
+      throw new Error(`Room ${token} does not exist`);
+    }
+    var index = localDb[token]['users'].findIndex(user => user['name'] == name);
+    if (index != -1) {
+      // throw new Error(`Username ${name} has been used`);
+      var user = {
+        'id': localDb[token]['users'][index]['id'],
+        'name': localDb[token]['users'][index]['name'],
+        'pos' : {
+          x : localDb[token]['users'][index]['pos']['x'],
+          z : localDb[token]['users'][index]['pos']['z'],
+        },
+        'character': localDb[token]['users'][index]['character'],
+        'message' : message
+      }
+      localDb[token]['users'][index] = user;
+      pubsub.publish(`Subscribe users in ${token}`, {subscribeToUser : user});
+      return message
+    } 
+    else {
+      throw new Error(`${name} does not exist`);
     }
   },
 };
