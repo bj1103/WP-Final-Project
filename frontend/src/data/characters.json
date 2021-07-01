@@ -1,8 +1,9 @@
 {
-    "test": { "type" :"./test/scene.gltf", "scalar" : 1},
     "Spotted-Jelly": { "type" : "./Spotted-Jelly/source/Spotted-Jelly.gltf", "scalar" : 1},
     "gundam_unicorn": { "type" : "./gundam_unicorn/scene.gltf", "scalar" : 0.01 },
     "rick_astley": { "type" : "./rick_astley/scene.gltf", "scalar" : 0.03 },
     "sumo_wrestler_fat" : { "type" : "./sumo_wrestler_fat/scene.gltf", "scalar" : 0.3 },
-    "sumo_wrestler_strong" : { "type" : "./sumo_wrestler_strong/scene.gltf", "scalar" : 0.03 }
+    "sumo_wrestler_strong" : { "type" : "./sumo_wrestler_strong/scene.gltf", "scalar" : 0.03 },
+    "steve" : { "type" : "./steve/scene.gltf", "scalar" : 0.10 },
+    "creeper" : { "type" : "./creeper/scene.gltf", "scalar" : 0.10 }
 }

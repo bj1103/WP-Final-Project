@@ -6,8 +6,6 @@ const Text = ({ text, position, scale = [2, 2, 2], color = 'black', fontSize = 4
     
     const canvas = useMemo(() => {
 
-        console.log('Render text', text);
-
         var fontface = 'Arial'
         var fontsize = fontSize
         var borderThickness = 4

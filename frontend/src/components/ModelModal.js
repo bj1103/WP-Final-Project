@@ -21,7 +21,7 @@ const ModelModal = ({ token, name, model, setModel, visible, setVisible, setSign
             variables: {
                 token: token,
                 name: name,
-                character: model
+                character: model,
             }
         }).then(() => {
             setSignedIn(true);

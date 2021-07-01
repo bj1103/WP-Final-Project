@@ -1,4 +1,7 @@
 {
     "table": { "type" : "./table/scene.gltf", "scalar" : 0.2 },
-    "armchair": { "type" : "./armchair/scene.gltf", "scalar" : 4 }
+    "armchair": { "type" : "./armchair/scene.gltf", "scalar" : 4 },
+    "piano": { "type" : "./piano/scene.gltf", "scalar" : 0.1 },
+    "chest": { "type" : "./chest/scene.gltf", "scalar" : 1.0 },
+    "tree": { "type" : "./tree/scene.gltf", "scalar" : 8.0 }
 }

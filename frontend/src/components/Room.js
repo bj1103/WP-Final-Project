@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, Suspense  } from "react";
 import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
-import { Stars, useAspect } from '@react-three/drei';
+import { Stars, useAspect, Environment } from '@react-three/drei';
 import { Physics } from '@react-three/cannon';
 
 import Plane from '../objects/Plane';
@@ -42,12 +42,12 @@ const Room = ({ name, token, model, displayStatus }) => {
 
     useEffect(() => {
         document.addEventListener('keydown', (e) => {
-            if (e.key === ' ' && !modalVisible2) {
+            if (e.key === ' ') {
                 setModalVisible(true);
             }
-            if (e.key === 'm') {
-                setModalVisible2(true);
-            }
+            // if (e.key === 'm') {
+            //     setModalVisible2(true);
+            // }
         })
     }, []);
 
@@ -166,8 +166,6 @@ const Room = ({ name, token, model, displayStatus }) => {
                                 />
                             })
                         }
-                    </Suspense>
-                    <Suspense fallback={null}>
                         {
                             objects.map(object => <Objects type={object.type} x={object.pos.x} z={object.pos.z}/>)
                         }

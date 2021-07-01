@@ -80,10 +80,6 @@ const Player = ({ name, move, myPos, setMyPos, character, message }) => {
         mixer?.update(delta);
     });
 
-    useEffect(() => {
-        console.log('Message changed', message);
-    }, [message]);
-
     return (
         <>
             <Text text={name} position={[gltf.scene.position.x, 2, gltf.scene.position.z]}/>
