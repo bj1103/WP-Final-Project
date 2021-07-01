@@ -26,3 +26,5 @@ $ yarn install
 $ yarn start
 ```
 
+前端 server 預設會跑在 PORT 3000，後端 server 預設會跑在 PORT 8789，如果需要使用其他 PORT，可以透過指定環境變數來更改。
+
