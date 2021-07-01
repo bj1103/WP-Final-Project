@@ -20,6 +20,7 @@ const SignIn = ({ name, setName, token, setToken, model, setModel, setSignedIn, 
                 visible={modalVisible}
                 setVisible={setModalVisible}
                 setSignedIn={setSignedIn}
+                displayStatus={displayStatus}
             />
             <Input
                 value={token}

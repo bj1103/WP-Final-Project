@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 
 const { Option } = Select;
 
-const ModelModal = ({ token, name, model, setModel, visible, setVisible, setSignedIn }) => {
+const ModelModal = ({ token, name, model, setModel, visible, setVisible, setSignedIn, displayStatus }) => {
     const [userLogin] = useMutation(USER_LOGIN_MUTATION);
     const [createRoom] = useMutation(ROOM_CREATE_MUTATION);
     const [usableCharacters, setUsableCharacters] = useState([]);
@@ -24,6 +24,7 @@ const ModelModal = ({ token, name, model, setModel, visible, setVisible, setSign
                 character: model,
             }
         }).then(() => {
+            displayStatus({ type: 'success', msg: 'Joined successfully' });
             setSignedIn(true);
         }).catch(e => {
             console.log('Login faild');
@@ -34,7 +35,7 @@ const ModelModal = ({ token, name, model, setModel, visible, setVisible, setSign
                     character: model,
                 }
             }).then(() => {
-                console.log('New room created', token);
+                displayStatus({ type: 'success', msg: `Room ${token} created` });
                 setSignedIn(true);
             });
         });
