@@ -1,7 +1,8 @@
-import { useState, useRef, useEffect, Suspense  } from "react";
+import { useState, useRef, useEffect, Suspense } from "react";
 import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
 import { Stars, useAspect, Environment } from '@react-three/drei';
 import { Physics } from '@react-three/cannon';
+import { notification } from 'antd';
 
 import Plane from '../objects/Plane';
 import Player from '../objects/Player';
@@ -12,20 +13,27 @@ import MessageModal from './MessageModal';
 
 import { useMutation, useQuery, useSubscription } from '@apollo/react-hooks';
 
-import { 
-    USER_MOVE_MUTATION, 
+import {
+    USER_MOVE_MUTATION,
     ROOM_QUERY,
     USER_SUBSCRIPTION,
     OBJECT_SUBSCRIPTION,
 } from '../graphql';
 
-const Room = ({ name, token, model, displayStatus }) => {
+const Room = ({ name, token, model, scene, displayStatus }) => {
     const [userMove] = useMutation(USER_MOVE_MUTATION);
     const [friends, setFriends] = useState([]);
     const [myPos, setMyPos] = useState([0, 0, 0]);
     const [objects, setObjects] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
-    const [modalVisible2, setModalVisible2] = useState(false);
+    const [modalVisible2, _setModalVisible2] = useState(false);
+
+    const modalVisible2Ref = useRef(modalVisible2);
+
+    const setModalVisible2 = (b) => {
+        modalVisible2Ref.current = b;
+        _setModalVisible2(b);
+    };
 
     const move = (direction) => {
         userMove({
@@ -42,19 +50,19 @@ const Room = ({ name, token, model, displayStatus }) => {
 
     useEffect(() => {
         document.addEventListener('keydown', (e) => {
-            if (e.key === ' ') {
+            if (e.key === ' ' && !modalVisible2Ref.current) {
                 setModalVisible(true);
             }
-            // if (e.key === 'm') {
-            //     setModalVisible2(true);
-            // }
+            if (e.key === 'm') {
+                setModalVisible2(true);
+            }
         })
     }, []);
 
-    const { loading, error, data, subscribeToMore } = useQuery(
+    const { data } = useQuery(
         ROOM_QUERY,
-        { 
-            variables: { 
+        {
+            variables: {
                 token: token,
             }
         }
@@ -94,7 +102,15 @@ const Room = ({ name, token, model, displayStatus }) => {
             },
         }
     )
-    
+
+    const openNotification = (name, msg) => {
+        notification.open({
+            message: name,
+            description: msg,
+            duration: 30,
+        });
+    };
+
     useSubscription(
         USER_SUBSCRIPTION,
         {
@@ -111,8 +127,13 @@ const Room = ({ name, token, model, displayStatus }) => {
                     var newFriends = friends.slice(0);
                     var idx = newFriends.findIndex(friend => friend.name === data.name);
                     if (idx === -1) {
+                        openNotification(`${data.name} joined`, '');
                         newFriends.push(data);
                     } else {
+                        if (data.message !== newFriends[idx].message) {
+                            console.log('Message', data.message);
+                            openNotification(data.name, data.message);
+                        }
                         newFriends[idx] = data;
                     }
                     setFriends(newFriends);
@@ -125,11 +146,11 @@ const Room = ({ name, token, model, displayStatus }) => {
 
     return (
         <>
-            <SelectModal 
-                token={token} 
+            <SelectModal
+                token={token}
                 x={myPos[0]}
                 z={myPos[2]}
-                visible={modalVisible} 
+                visible={modalVisible}
                 setVisible={setModalVisible}
             />
             <MessageModal
@@ -138,36 +159,35 @@ const Room = ({ name, token, model, displayStatus }) => {
                 visible={modalVisible2}
                 setVisible={setModalVisible2}
             />
-            <Canvas camera={{position: [0, 3, 5]}}>
+            <Canvas camera={{ position: [0, 3, 5] }}>
                 {/* <Stars /> */}
                 <ambientLight intensity={0.5} />
                 {/* <spotLight position={[10, 15, 10]} angle={0.3} /> */}
+                <Environment background={true} preset={scene} />
                 <Physics>
                     <Suspense fallback={null}>
                         {
                             friends.map(friend => {
-                                return (friend.name === name) ? 
-                                <Player
-                                    name={name}
-                                    move={move}
-                                    key={name}
-                                    myPos={myPos}
-                                    setMyPos={setMyPos}
-                                    character={model}
-                                    message={friend.message}
-                                /> :
-                                <Friend 
-                                    name={friend.name} 
-                                    key={friend.name} 
-                                    x={friend.pos.x} 
-                                    z={friend.pos.z}
-                                    character={friend.character}
-                                    message={friend.message}
-                                />
+                                return (friend.name === name) ?
+                                    <Player
+                                        name={name}
+                                        move={move}
+                                        key={name}
+                                        myPos={myPos}
+                                        setMyPos={setMyPos}
+                                        character={model}
+                                    /> :
+                                    <Friend
+                                        name={friend.name}
+                                        key={friend.name}
+                                        x={friend.pos.x}
+                                        z={friend.pos.z}
+                                        character={friend.character}
+                                    />
                             })
                         }
                         {
-                            objects.map(object => <Objects type={object.type} x={object.pos.x} z={object.pos.z}/>)
+                            objects.map(object => <Objects type={object.type} x={object.pos.x} z={object.pos.z} />)
                         }
                     </Suspense>
                     <Plane />

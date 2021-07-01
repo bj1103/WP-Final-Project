@@ -5,7 +5,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import characters from '../data/characters.json';
 import Text from './Text';
 
-const Friend = ({ name, x, z, character, message }) => {
+const Friend = ({ name, x, z, character }) => {
     // console.log('type:', character);
     // console.log('char:', characters);
     // console.log(character, characters[character]['type']);
@@ -19,7 +19,7 @@ const Friend = ({ name, x, z, character, message }) => {
     // }, []);
 
     useEffect(() => {
-        console.log('friend', name, x, z);
+        // console.log('friend', name, x, z);
         // api.position.set(x, position.current[1], z);
         gltf.scene.position.set(x, 0, z);
     }, [x, z]);
@@ -34,7 +34,6 @@ const Friend = ({ name, x, z, character, message }) => {
         // </>
         <>
             <Text text={name} position={[gltf.scene.position.x, 2, gltf.scene.position.z]}/>
-            <Text text={message} position={[gltf.scene.position.x, 2.5, gltf.scene.position.z]}/>
             {<primitive 
                 object={gltf.scene.clone(true)} 
                 scale={characters[character]['scalar']}

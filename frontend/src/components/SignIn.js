@@ -5,7 +5,7 @@ import { UserOutlined } from "@ant-design/icons";
 
 import ModelModal from './ModelModal';
 
-const SignIn = ({ name, setName, token, setToken, model, setModel, setSignedIn, displayStatus }) => {
+const SignIn = ({ name, setName, token, setToken, model, setModel, setSignedIn, displayStatus, setScene }) => {
 
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -21,6 +21,7 @@ const SignIn = ({ name, setName, token, setToken, model, setModel, setSignedIn, 
                 setVisible={setModalVisible}
                 setSignedIn={setSignedIn}
                 displayStatus={displayStatus}
+                setScene={setScene}
             />
             <Input
                 value={token}

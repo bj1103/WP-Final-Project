@@ -21,6 +21,7 @@ const App = () => {
   const [signedIn, setSignedIn] = useState(false);
   const [name, setName] = useState(savedName || "");
   const [token, setToken] = useState(savedToken || "");
+  const [scene, setScene] = useState("");
   const [model, setModel] = useState(savedModel || Object.keys(characters)[0]);
 
   useEffect(() => {
@@ -59,6 +60,7 @@ const App = () => {
                 name={name} 
                 token={token}
                 model={model}
+                scene={scene}
                 displayStatus={displayStatus}
               />
             </Suspense>
@@ -72,6 +74,7 @@ const App = () => {
             setToken={setToken}
             model={model}
             setModel={setModel}
+            setScene={setScene}
             setSignedIn={setSignedIn}
             displayStatus={displayStatus}
           />

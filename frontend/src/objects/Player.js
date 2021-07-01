@@ -9,7 +9,7 @@ import characters from '../data/characters.json';
 
 import Text from './Text';
 
-const Player = ({ name, move, myPos, setMyPos, character, message }) => {
+const Player = ({ name, move, myPos, setMyPos, character }) => {
     const { camera } = useThree();
     const orbitref = useRef();
     const gltf = useLoader(GLTFLoader, characters[character]['type']);
@@ -83,7 +83,6 @@ const Player = ({ name, move, myPos, setMyPos, character, message }) => {
     return (
         <>
             <Text text={name} position={[gltf.scene.position.x, 2, gltf.scene.position.z]}/>
-            <Text text={message} position={[gltf.scene.position.x, 2.5, gltf.scene.position.z]}/>
             {/* <Text text={name} position={[position.current[0], 2, position.current[2]]}/> */}
             {<primitive 
                 object={gltf.scene} 

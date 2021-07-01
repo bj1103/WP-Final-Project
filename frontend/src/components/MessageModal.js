@@ -17,6 +17,7 @@ const SelectModal = ({ token, name, visible, setVisible }) => {
                 message: message,
             }
         });
+        setMessage("");
         setVisible(false);
     };
 

@@ -1,7 +1,7 @@
 import { Modal, Select } from 'antd';
 import { useMutation, useQuery } from '@apollo/react-hooks';
-import { 
-    USER_LOGIN_MUTATION, 
+import {
+    USER_LOGIN_MUTATION,
     CHARACTER_QUERY,
     ROOM_CREATE_MUTATION,
 } from '../graphql';
@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 
 const { Option } = Select;
 
-const ModelModal = ({ token, name, model, setModel, visible, setVisible, setSignedIn, displayStatus }) => {
+const ModelModal = ({ token, name, model, setModel, visible, setVisible, setSignedIn, displayStatus, setScene }) => {
     const [userLogin] = useMutation(USER_LOGIN_MUTATION);
     const [createRoom] = useMutation(ROOM_CREATE_MUTATION);
     const [usableCharacters, setUsableCharacters] = useState([]);
@@ -51,12 +51,17 @@ const ModelModal = ({ token, name, model, setModel, visible, setVisible, setSign
     };
 
     const handleChange = (value) => {
-        console.log(`selected ${value}`);
+        // console.log(`selected ${value}`);
         setModel(value);
     };
 
+    const handleChange2 = (value) => {
+        // console.log(`selected ${value}`);
+        setScene(value);
+    };
+
     const { data, refetch } = useQuery(
-        CHARACTER_QUERY, 
+        CHARACTER_QUERY,
         {
             variables: {
                 token: token,
@@ -79,27 +84,48 @@ const ModelModal = ({ token, name, model, setModel, visible, setVisible, setSign
         }
     }, [visible]);
 
+    const scenes = [
+        'sunset',
+        'dawn',
+        'night',
+        'warehouse',
+        'forest',
+        'apartment',
+        'studio',
+        'city',
+        'park',
+        'lobby',
+    ];
+
     return (
-        <Modal 
-            title="Choose your character" 
-            visible={visible} 
-            onOk={handleOk} 
+        <Modal
+            title="Room options"
+            visible={visible}
+            onOk={handleOk}
             onCancel={handleCancel}
             closable={false}
         >
+            <p>Character</p>
             <Select
-                defaultValue={Object.keys(characters)[0]} 
-                style={{ width: '100%' }} 
+                defaultValue={Object.keys(characters)[0]}
+                style={{ width: '100%', marginBottom: '20px' }}
                 onChange={handleChange}
             >
-                {/* {
-                    Object.keys(usableCharacters).map(key =>
-                        <Option value={key} key={key}>{key}</Option>
-                    )
-                } */}
                 {
                     usableCharacters.map(key =>
                         <Option value={key} key={key}>{key}</Option>
+                    )
+                }
+            </Select>
+            <p>Background</p>
+            <Select
+                defaultValue={scenes[0]}
+                style={{ width: '100%' }}
+                onChange={handleChange2}
+            >
+                {
+                    scenes.map(key =>
+                        <Option value={key} key={key}>{key}</Option>    
                     )
                 }
             </Select>
