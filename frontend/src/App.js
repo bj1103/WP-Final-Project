@@ -21,7 +21,7 @@ const App = () => {
   const [signedIn, setSignedIn] = useState(false);
   const [name, setName] = useState(savedName || "");
   const [token, setToken] = useState(savedToken || "");
-  const [scene, setScene] = useState("");
+  const [scene, setScene] = useState("sunset");
   const [model, setModel] = useState(savedModel || Object.keys(characters)[0]);
 
   useEffect(() => {
