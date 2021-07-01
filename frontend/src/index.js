@@ -17,12 +17,12 @@ import reportWebVitals from './reportWebVitals';
 
 // Create an http link:
 const httpLink = new HttpLink({
-  uri: 'http://linux4.csie.ntu.edu.tw:8789/',
+  uri: 'http://localhost:4000/',
 });
 
 // Create a WebSocket link:
 const wsLink = new WebSocketLink({
-  uri: `ws://linux4.csie.ntu.edu.tw:8789/`,
+  uri: `ws://localhost:4000/`,
   options: { reconnect: true },
 });
 
